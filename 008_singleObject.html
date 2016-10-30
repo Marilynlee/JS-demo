@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>单体对象</title>
+    <script>
+        /*
+         *引用类型对象之单体对象
+         * 单体对象:不需要对对象进行实例化，就可以使用其方法和属性;
+         * Global：无形的对象，内部定义的方法和属性encodeURI、encodeURIComponent等
+         * Math：内置的Math对象可以用来处理各种数学运算
+         * */
+
+        //Global全局对象、终极的兜底的对象。不存在的
+
+
+        //global的encodeURI、encodeURIComponent方法,decodeURI、decodeURIComponent方法
+        /*var uri = 'http://www.baidu.com cn';
+         var a1 = encodeURI(uri);   //不会将':','//'等进行转码
+         var a2 = encodeURIComponent(uri);  //常用的方法，可以将任何不标准的文字进行转码
+         console.log('a1' + ':' + a1 + '\n' + 'a2' + ':' + a2);
+         console.log('a1' + ':' + decodeURI(a1) + '\n' + 'a2' + ':' + decodeURIComponent(a2));*/
+
+        //eval(string)方法，无形的js解析器
+        /*var str1 = 'var a=10,b=9;';
+         eval(str1);
+         alert(a + b);  //19*/
+
+        //数组、字符串可以直接使用eval函数
+        //对象要使用()括起来
+        /*var object = "{name:'Lyle',age:28}";
+         var obj = eval('(' + object + ')');
+         alert('name:'+obj.name+'\n'+'age:'+obj.age);*/
+
+        //parseInt  parseFloat将对象转为number类型
+        /*var num1 = parseInt('20');
+         var num2 = parseFloat('15.6');
+         alert('num1:' + typeof num1 + '\n' + 'num2:' + typeof num2);*/
+
+        //escape  unescape  URI转码针对中文的转码解码方法
+        /*var str = '啦啦啦';
+         var a=escape(str);
+         var b=unescape(a);
+         alert(a);
+         alert(b);*/
+
+        //isNaN判断是否为number类型，是number返回值为false否则返回true
+        //js中只有NaN自己不等于自己本身
+        /*var a1=10;
+         var a2='abd10d';
+         var a3='10';
+         alert(isNaN(a1));    //false
+         alert(isNaN(a2));    //true
+         alert(isNaN(a3));    //false*/
+
+        //Date类型
+        var date=new Date();   //获取当时的时间
+        var year=date.getFullYear();  //获取年份
+        var month=date.getMonth()+1;  //获取月份，需要+1
+        var day=date.getDate();  //获取日期
+        var h=date.getHours();  //获取小时
+        var m=date.getMinutes();  //获取分钟
+        var s=date.getSeconds();  //获取秒
+        var week=date.getDay();  //获取星期
+        var time=date.getTime();  //获取当前时间的毫秒数
+        document.write('today:'+year+' '+month+' '+day+' '+h+':'+m+':'+s+' week:'+week+' time:'+time);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

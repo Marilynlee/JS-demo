@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>垃圾回收</title>
+    <script>
+        //垃圾回收   1 标记法  2 引用计数法
+        function test() {
+            var a = 10;
+            var b = 20;
+        }
+        test();
+        //test被执行后,变量a b被标记为可回收
+
+
+        //Java等高级语言中，for，if是块级作用域
+        //JS中没有块级作用域,for循环执行完后，依然可以访问i，i并没有被回收。但不能在执行环境app函数外访问i，
+        /* function app() {
+         for (var i = 1; i < 5; i++) {
+         console.log(i);
+         }
+         alert(i);  //5
+         }
+         app();*/
+
+
+        //模仿java的块级作用域,JS中()表示执行
+        function app() {
+            (function () {
+                for (var i = 1; i < 5; i++) {
+                    console.log(i);
+                }
+            })();
+            alert(i);  //i is not defined
+        }
+        app();
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

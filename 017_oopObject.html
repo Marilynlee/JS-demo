@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>oop1</title>
+    <script>
+
+        //只能创建单一的对象，对象无法进行复制
+        /*var obj = {};
+         obj.name = 'lyle';
+         obj.age = 25;
+         obj.sex = 'female';
+         obj.show = function () {
+         console.log('I am lyle.');
+         };*/
+
+        //类的概念
+        //1、工厂模式
+        function person(name, age, sex) {
+            var obj = {};
+            obj.name = name;
+            obj.age = age;
+            obj.sex = sex;
+            obj.show = function () {
+                console.log('I am ' + this.name + '!');
+            };
+            return obj;
+        }
+
+        var s1 = person('zs', 23, 'male');
+        var s2 = person('we', 21, 'female');
+        alert(s1 == s2);//false
+        s1.show();
+
+        //2、构造函数法:函数第一个字母大写（类的模板）
+        function Person(name, age, sex) {
+            this.name = name;
+            this.age = age;
+            this.sex = sex;
+            this.show = function () {
+                console.log('I am ' + this.name + '!');
+            }
+        }
+        //构建对象，使用new关键字，传递参数,执行模板，返回对象
+        var p1 = new Person('ls', 25, 'male');
+        var p2 = new Person('lsq', 28, 'female');
+        alert(p1 == p2);//false,通过构造法的模板创建出不同的实例对象,函数方法重复，浪费资源
+        //alert(p1 instanceof Person);//true,用来判断对象是否是模板的实例
+        //alert(p1 instanceof Object);//true
+
+        //创建对象的方法
+        //1、当做构造函数调用。如p1和p2的创建方法；
+        //2、当做普通对象调用，如下：
+        Person('cd', 30, 'male');
+        //使用2方法相当于window调用Person，类似于在window内定义了属性并赋值,直接定义在window上
+        alert(name);//cd
+        //3、在另外一个对象的作用域去调用,使用call apply
+        var s = {};
+//        Person.call(s,'ve',21,'female');
+        Person.apply(s,['ve',21,'female']);
+        alert(s.name);//ve
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

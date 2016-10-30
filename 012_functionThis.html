@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>this</title>
+    <script>
+        //this对象是运行时基于执行环境绑定的
+        //全局函数中，this=window
+        //当函数被某个对象的方法调用时，this等于那个对象，this总是指代调用者
+
+        //this总是指向调用者
+        var k=10;
+        var a;
+        function test(){
+            this.k=20;
+        }
+        alert(k);//10
+        test();//此次执行相当于window.test();
+        alert(test.k);//undefined
+        //alert(window.k); //20
+        alert(k);//20
+    </script>
+</head>
+<body>
+
+</body>
+</html>

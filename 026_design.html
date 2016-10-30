@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    //js中定义接口的三种方式
+
+    //1、注解描述的方式。优点：程序员有一个参考；缺点：还是属于文档的范畴，方式过于松散无法检查接口的方法是否完全被实现
+    /**
+     * interface Composite{
+     *      function add(obj);
+     *      function remove(obj);
+     *      function update(obj);
+     * }
+     *
+     */
+
+//CompositeImpl implements Composite
+/*    var CompositeImpl=function(){
+
+    };
+
+    CompositeImpl.prototype.add=function(obj){
+            //do something...
+    };
+    CompositeImpl.prototype.remove=function(obj){
+            //do something...
+    };
+    CompositeImpl.prototype.update=function(obj){
+            //do something...
+    };
+
+    var c1=new CompositeImpl();
+    var c2=new CompositeImpl();
+    alert(c1.add==c2.add);//注释remove方法依然可以启动*/
+
+
+    //2、属性检测的方式
+    /**
+     * interface Composite{
+     *      function add(obj);
+     *      function remove(obj);
+     *      function update(obj);
+     * }
+     *
+     * interface FormItem(){
+     *      function select(obj);
+      *  }
+     *
+     */
+    //CompositeImpl implements Composite,FormItem
+    var CompositeImpl=function(){
+        //显示的在类的内部接收所实现的接口，约定俗成：在类的内部定义一个变量（名字必须固定）
+        this.implementsInterfaces=['Composite','FormItem'];
+
+    };
+
+    CompositeImpl.prototype.add=function(obj){
+        //do something...
+        alert('add.......');
+    };
+    CompositeImpl.prototype.remove=function(obj){
+        //do something...
+    };
+    CompositeImpl.prototype.update=function(obj){
+        //do something...
+    };
+    CompositeImpl.prototype.select=function(obj){
+        //do something...
+    };
+
+
+    //CheckCompositeImpl检测CompositeImpl类的对象
+    function CheckCompositeImpl(instance){
+        //判断当前对象是否实现了所有接口
+        if(!IsImplements(instance,'Composite','FormItem')){
+            throw new Error('Object dose not implements a required interface');
+        }
+
+
+
+    }
+    //公用的具体的检测方法（核心方法）返回值类型：Boolean
+    //主要目的：判断实例对象有没有实现相关的接口
+    function IsImplements(object){
+        //arguments对象获得函数的实际参数
+        for(var i=1;i<arguments.length;i++){
+            //接收所实现的每一个接口的名字
+            var interfaceName=arguments[i];
+            //判断此方法成功还是失败？
+            var interfaceFound=false;
+            for(var j=0;j<object.implementsInterfaces.length;j++){
+                if(object.implementsInterfaces[j]==interfaceName){
+                    interfaceFound=true;
+                    break;
+                }
+            }
+
+            if(!interfaceFound){
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    var c3= new CompositeImpl();
+    CheckCompositeImpl(c3);
+    c3.add();
+
+
+
+    //3、鸭式辩型的方式
+
+</script></body>
+</html>

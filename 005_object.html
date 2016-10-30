@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Object</title>
+</head>
+<body>
+<script>
+    //object是所有类型的基础类
+
+    //    创建一个object
+    var obj1 = new Object();//实例化对象
+    var obj = {};  //实例化对象
+
+    //    给对象添加方法和属性
+    obj.name = 'Lala';
+    obj.age = 39;
+    obj['sex'] = 'female';
+    obj.say = function () {
+        alert("This is object");
+    };
+
+    /*访问对象的方法和属性*/
+    //    alert(obj.name);   //LaLa
+    //    alert(obj.age);    //39
+    //    obj.say();         //This is object
+
+    /*delete可以删除对象的方法和属性，只能删除对象的
+     使用for in遍历一个对象属性及属性值，方法和方法内容*/
+//        delete obj.age;
+    //    for(var x in obj){
+    //        alert(x+':'+obj[x]);
+    //    }
+    //name:Lala
+    // sex:female
+    // say :function () {alert("This is object");};
+    // age已经被删除
+
+
+    /*constructor保存对象的创建函数*/
+    //    alert(obj.constructor);    //function Object(){native code}
+
+    //    var arr = [];
+    //    alert(arr.constructor);    //function Array(){native code}
+
+    /*hasOwnProperty('name')查询是否存在当前传入的属性或者方法*/
+//    alert(obj.hasOwnProperty('name'));  //true
+//    alert(obj.hasOwnProperty('birth'));  //false
+
+    /*isProtoTypeOf(Object)查询是否是Object的原型*/
+    /*propertyIsEnumerable('name')查询当前传入的属性或者方法是否可以被 for in 枚举*/
+    alert(obj.propertyIsEnumerable('name'));  //true
+
+</script>
+</body>
+</html>

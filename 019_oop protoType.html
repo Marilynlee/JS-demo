@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型</title>
+    <script>
+
+        //ECMA5新特性:Object.getPrototypeOf();根据实例对象获得原型对象的方法
+        function Person() {
+
+        }
+        Person.prototype.name = 'cc';
+        Person.prototype.age = 24;
+        Person.prototype.show = function () {
+            alert(this.name);
+        };
+        var p5 = new Person();
+        var p6 = new Person();
+
+        //构造函数   原型对象   实例对象
+        var obj = Person.prototype;
+
+        //构造函数.prototype=原型对象
+        //alert(typeof obj);//object
+
+        //原型对象.constructor=构造函数
+        //alert(obj.constructor);//function Person(){}
+
+        //实例对象.prototype=原型对象
+        //alert(obj.isPrototypeOf(p5));//true,判断obj是不是p5的原型对象
+        //alert(Object.getPrototypeOf(p5)==obj);//true,通过Object.getPrototypeOf(p5)获得p5的原型，并判断是不是obj
+
+        /*
+         p6.name='dd';
+         alert(p6.name);//dd
+         alert(p6.sex);//undefined
+         delete p6.name;
+         alert(p6.name);//cc  通过删除实例对象的属性值可以获得原型的属性值，也可以通过以下方法获得
+         alert(Object.getPrototypeOf(p6).name);
+
+         //当代码每次读取一个对象的属性的时候，首先会搜索实例对象，如果没有就会向上搜索其对应的构造函数，如果还没有就返回undefined
+         */
+
+
+
+        //判断一个属性是不是属于当前对象
+        /* var p7=new Person();
+         alert(p7.name);//cc
+         alert(p7.hasOwnProperty('name'));//false
+         p7.name='ee';
+         alert(p7.hasOwnProperty('name'));//true*/
+
+
+
+        /* //in操作符：for-in  判断属性是否存在实例对象和原型对象中，只要有一个存在返回true，如果两个都没有的话返回false
+         var p8 = new Person();
+         alert('name' in p8);//true
+         var p9 = new Person();
+         p9.name = 'ff';
+         alert('name' in p9);//true
+         alert('sex' in p9);//false
+
+         //自己封装的判断原型对象中是否存在这个属性，参一：当前对象；参二：要判断的属性
+         function hasPrototypeProperty(object, property) {
+         return !object.hasOwnProperty(property) && property in object;
+         }
+         alert(hasPrototypeProperty(p8, 'name'));//true
+         alert(hasPrototypeProperty(p8, 'sex'));//false*/
+
+        //ECMA5新特性:Object.keys  可以获得当前对象的属性和方法
+        var p10 = new Person();
+        p10.name = 'as';
+        p10.age = 23;
+        alert(Object.keys(p10));//name,age 是一个数组
+        alert(Object.keys(Person.prototype));//name,age，show 是一个数组
+
+        //constructor属性不能被枚举[eable=false]
+        //ECMA5新特性:Object.getOwnPropertyName枚举所有属性，不管该属性能否被枚举
+        alert(Object.getOwnPropertyNames(Person.prototype));//constructor,name,age，show 是一个数组
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

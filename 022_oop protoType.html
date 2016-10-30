@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>简单原型</title>
+    <script>
+
+        //原型：原型对象里的所有属性和方法，被所有实例化的对象所共享
+        /*function Person() {
+
+         }
+
+         Person.prototype = {
+         constructor: Person,
+         name: 'aa',
+         age: 25,
+         friends: ['bb', 'cc'],
+         say: function () {
+         alert('I am ' + this.name);
+         }
+         };
+
+         var p1 = new Person();
+         var p2 = new Person();
+         p1.friends.push('dd');
+         alert(p2.friends);//bb  cc  dd
+         // 由于共享的特性导致p1添加的数据被p2页访问了
+         */
+
+        //组合使用原型和构造函数式解决上述问题(定义一个类 常用方式)
+        /*function Student(name, age, friends) {
+         this.name = name;
+         this.age = age;
+         this.friends = friends;
+         }
+         Student.prototype = {
+         constructor: Student,
+         say: function () {
+         alert('I am ' + this.name);
+         }
+         };
+
+         var s1 = new Student('hh', 25, ['yy', 'zz']);
+         var s2 = new Student('jj', 23, ['oo', 'pp', 'uu']);
+         alert(s1.friends);//'yy', 'zz'
+         alert(s2.friends);//'oo', 'pp', 'uu'
+         s1.say();//I am hh
+         s2.say();//I am jj*/
+
+        //动态原型模式:让所有的代码都封装到一起
+        /*function Teach(name, age, friends) {
+         this.name = name;
+         this.age = age;
+         this.friends = friends;
+
+         //动态原型方法
+         if (typeof this.say != 'function') {
+         Teach.prototype.say = function () {
+         alert('I am ' + this.name);
+         }
+
+         }
+         }*/
+
+        //稳妥构造函数式durable object（稳妥对象）适合非常安全的环境
+        //1、没有公共属性；2、不能使用this对象
+        function Mini(name, age, friends) {
+//            创建一个要返回的对象
+            var obj={};
+//            可以定义一下私有的变量和函数
+            var name=name;
+//            添加一个方法
+            obj.say=function(){
+                alert(name);
+            };
+            return obj;
+        }
+        var m1=new Mini('fr');
+        m1.say();
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

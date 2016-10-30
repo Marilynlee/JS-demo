@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>var</title>
+</head>
+<body>
+<!--<script type="text/javascript" charset="utf-8">
+    //window对象，window可以省略
+    window.alert('hello JavaScript!');
+    //dom对象，dom不可以省略
+    document.write('hello Javascript');
+    //把内容打印到控制台
+    console.info('hello js');
+
+</script>-->
+<!--外部引入文件，src属性 内部不可以在写JS代码，不生效 -->
+<!--defer是延迟执行，当页面都加载完之后在执行-->
+<script type="text/javascript" defer="defer" charset="UTF-8" src="../commons/hello.js"></script>
+<!--script是边解析边执行-->
+
+<script>
+
+    /* //    变量只有2中类型：全局变量和局部变量
+     var a = 3;   //全局变量
+     function test() {
+     var b = 2;  //局部变量
+     c = 4;  //全局变量 方法内部不加var的变量默认为全局变量
+     console.log(a);
+     console.log(b);
+     console.log(c);
+     }
+
+     //    console.log(b);    //undefined  局部变量只能在方法内部访问，外部不能访问
+     //    console.log(c);     //undefined 因为没有调用test方法，所以它内部定义的全局变量也不能访问
+     test();
+     console.log(c);      //4 test被调用，全局变量c生效*/
+
+
+
+    //    JS变量的基本类型：number boolean string undefined Null
+
+    //    Number的类型 包括整数、小数、正负无穷、NaN
+    var a = 10,
+        b = 10.5,
+        d = 1 / 0,
+        e = 070,
+        f = 0x11;
+//    alert(d);   //infinity 表示正无穷
+//    alert(e);   //56  0开头表示八进制
+//    alert(f);   //17 0x开头表示十六进制
+
+    var a1 = 0.1, a2 = 0.2;
+    /*if (a1 + a2 == 0.3) {
+        alert('ok');
+    } else {
+        alert('no');
+    }
+    //弹出no，因为number的小数是17位精度，使用if作为条件判断会损失精度导致判断失败，应避免*/
+
+    var c=parseInt('a12aa');    //parseInt将aaa转换为整数
+//    alert(c);    //NaN  表示不是一个数字
+    var c1=parseInt('12aaa');
+//    alert(c1);    //12  parseInt将会将首位可以转化的数值直接返回，如果首位不是数字，将会直接返回NaN
+
+    var b1;
+//    alert(b1);  //undefined  undefined数据类型只有一个值就是undefined，表示变量被声明但未赋值
+    var h=null;
+//    alert(h);   //null  null数据类型表示空值
+    var str='this is string';
+//    alert(str);  //this is string   string数据类型使用单引号或双引号括起来的
+    var boo=true;  //布尔类型数据
+
+
+//    总结：JS的变量都是用var 来声明的
+//         变量的类型不是在声明的时候确定，根据所赋的值决定变量的类型，所以JS是一种弱类型的脚本语言
+
+
+        //    引用数据类型：object类型（包括对象、数组、正则、日期……等等）
+    var arr=[1,2,3,4];     //数组类型
+    var date=new Date();   //日期类型
+    var obj={};            //空对象
+
+
+//    关键字typeof 可以用来判断变量的类型
+    alert(typeof a);    //number
+    alert(typeof c);    //number
+    alert(typeof b1);    //undefined
+    alert(typeof h);    //object  h为null，表示空对象的引用
+    alert(typeof str);    //string
+    alert(typeof arr);    //object
+    alert(typeof date);    //object
+    alert(typeof obj);    //object
+    alert(typeof boo);    //boolean
+</script>
+</body>
+</html>

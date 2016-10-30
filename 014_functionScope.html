@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>执行环境和作用域</title>
+    <script>
+
+        //执行环境 window对象（最上层的执行环境）
+
+        //c1是一级作用域，c2是二级作用域，c3是三级作用域。环境变量是一层一层向上追溯，底层变量可以访问他的上级（变量和函数），上层变量不能访问下层变量，但是可以访问同级的函数
+        var c1 = "blue";
+
+        //        每一个函数都是一个执行环境（隐式产生一个variable obj，函数体内的所有变量和方法都是保存在此obj上的方法和属性）
+        function changeColor() {
+            var c2 = "red";
+
+            function swapColor() {
+                var c3 = c2;
+                c2 = c1;
+                c1 = c3;
+                //这里可以访问：color1、2、3
+                console.log(c1, c2, c3);
+            }
+
+            //这里可以访问color1、color2、但不能访问color3
+            swapColor();
+            console.log(c1, c2);
+        }
+        //这里只能访问color1
+        changeColor();
+        console.log(c1);
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

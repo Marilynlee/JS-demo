@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>函数002</title>
+    <script>
+        //函数的三种定义方法,1和2比较常用
+
+        /*//1 function语句
+        function aa(){
+            console.log('this is aa function');
+        }
+
+
+        //2 函数的直接量方式 ECMAScript推荐方式
+        var bb=function(){
+            console.log('this is bb function');
+        };
+
+
+        //3 function构造函数式
+        var cc=new Function('a','b','return a+b;');
+        alert(cc(1,2));*/
+
+        //比较函数定义方式的执行效率：function语句形式是静态的，解析一次存入内存，用时短，构造函数是动态的，每次执行的时候创建一次，不占内容
+        /*var d1 = new Date();
+        var t1 = d1.getTime();
+        for(var i =0 ; i <100000;i++){
+//            function test1(){;}   //十几毫秒
+//            var test2 = new Function();  //一百多毫秒
+        }
+        var d2 = new Date();
+        var t2 = d2.getTime();
+        alert(t2 -t1);*/
+
+
+//解析顺序：function语句函数JS会优先解析，直接变量式是先声明在赋值的过程
+
+        /*test1();  //1111
+        function test1(){
+            alert('1111');
+        }
+
+
+        alert(test2);  //undefined  相当于声明test2但未赋值
+        var test2=function (){
+            alert('2222');
+        };*/
+
+       function f(){return 1;} 				// 函数1
+        alert(f());		//返回值为4 说明第1个函数被第4个函数覆盖
+        var f = new Function("return 2;");		// 函数2
+        alert(f());		//返回值为2 说明第4个函数被第2个函数覆盖
+        var f = function(){return 3;};			// 函数3
+        alert(f());	       //返回值为3 说明第2个函数被第3个函数覆盖
+        function f(){return 4;} 				// 函数4
+        alert(f());		//返回值为3 说明第4个函数被第3个函数覆盖
+        var f = new Function("return 5"); 		// 函数5
+        alert(f());	//返回值为5 说明第3个函数被第5个函数覆盖
+        var f = function(){return 6 ;};			// 函数6
+        alert(f());		//返回值为6 说明第5个函数被第6个函数覆盖*/
+
+
+        //函数作用域
+        var k = 1 ;
+        function t1(){
+            var k = 2 ;
+            function test(){return k ;}
+//            var test = function(){ return k};
+//            var test = new Function('return k;');   //具有顶级作用域，相当于在最外层进行声明，是全局的，所以k赋值为1
+            alert(test());
+        }
+        t1(); //2  2  1
+
+
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

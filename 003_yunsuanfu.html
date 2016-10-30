@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>运算符</title>
+</head>
+<body>
+<script>
+
+    var a=10,b=10.0;
+    if(a==b){
+//        alert('equal');  //equal
+    }
+
+//    JS的自动转化机制
+// ==表示可以经过自动转化，只是比较值
+// ===可以经过自动转化 先比较值 在比较数据类型
+
+    var c= 1,d=true;
+    if(c==d){
+//        alert('equal');    //equal
+    }
+    if(c===d){
+//        alert('equal');
+    }else{
+//        alert('unequal');
+    }    //unequal
+
+//三目运算
+    var e=10/2>4?111111:222222;  //表示?前表达式为真返回:前面的值，为假返回:后面的值
+    alert(e);    //111111
+
+//控制语句 if for while break return等；
+    //for循环的死循环
+    /*for(;;){
+      console.log('死循环');
+    }*/
+
+
+
+</script>
+</body>
+</html>

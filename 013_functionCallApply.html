@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>call apply</title>
+    <script>
+
+        //call apply简单的用法：绑定一些函数，用于传递参数调用
+
+        /*function sum(x, y) {
+         return x + y;
+         }
+
+         function cal(n, m) {
+         //将sum方法通过call绑定到this，即当前函数或者作用域内，call按顺序接受参数，apply按数组接受参数
+         return sum.call(this, n, m);
+
+         }
+         function app(n, m) {
+         return sum.apply(this, [n, m]);
+         }
+
+         alert(cal(10, 20));//30
+         alert(app(10, 90));//100*/
+
+        //扩充作用域
+        /*window.color='red';
+         var obj={color:'blue'};
+         function showColor(){
+         alert(this.color);
+         }
+         showColor.call(window);  //red  this指代window
+         showColor.call(obj);  //blue  this指代obj
+         */
+
+        //call方法的简单模拟与实现
+
+        //function方法
+        function test(a, b) {
+            console.log(this.constructor);
+            return a + b;
+
+        }
+
+        //自定义对象
+        function Obj(x, y) {
+            this.x = x;
+            this.y = y;
+            return x * y;
+        }
+        var a = new Obj(12, 13);
+        alert(test.call(a, a.x, a.y));//25
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

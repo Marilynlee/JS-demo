@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>闭包</title>
+    <script>
+        var name = "xiao A";
+        var obj = {
+            name: "xiao B",
+            getName: function () {
+                return function () {
+                    console.log(this);
+                    return this.name;
+                }
+            }
+        };
+        //alert(obj.getName()());//xiao A
+
+
+        //分析原理
+        //getName()是obj进行调用的，而obi.getName()是window进行调用的，其执行完后返回匿名函数，也是返回给window，所以this.name指的是window作用域范围内的name值
+
+        //k为函数类型，k为全局变量，即函数体为全局函数，其作用域为全局。所以k()执行时，this.name返回为全局的name值，即xiao A
+        /*var k = obj.getName();
+         alert(k);  //function(){return this.name}
+         alert(k());   //xiao A*/
+
+
+        var obj1 = {
+            name: "xiao B",
+            getName: function () {
+                //getName只能被obj1调用，这里使用n保存this的指代，即为obj1
+                var n = this;
+                return function () {
+                    //这里返回的就是obj1的name
+                    return n.name;
+                }
+            }
+
+        };
+        //alert(obj1.getName()());//xiao B
+
+
+        //闭包：一个函数可以访问另外一个函数作用域中的变量
+        //封闭性：private具有保护变量的作用
+
+        //1级作用域
+        function f(x) {
+        //2级作用域
+            var temp = x;
+            return function (x) {
+        //3级作用域
+                temp += x;
+                alert(temp);
+            }
+        }
+        var a = f(1);
+        //alert(a); //function(x){temp += x;alert(temp);}
+        a(5);//6
+        a(10);//16
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

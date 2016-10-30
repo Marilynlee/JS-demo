@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>函数参数</title>
+    <script>
+
+        //function参数
+
+        //js中函数的参数分为形参和实参，下例中的a，b，c，d是形参，10,20是实参
+
+        /* function test(a,b){
+
+         //函数体内调用test.length可以访问形参的个数
+         //函数内部使用arguments数组对象去接受实参,arguments对象只能在函数体内调用，外部不可以调用
+         /!*alert(test.length);
+         alert(arguments.length);
+         alert(arguments[0]);
+         alert(arguments[1]);*!/
+
+         //arguments多用于递归操作，arguments.callee指代函数本身
+         alert(arguments.callee.length);//2  arguments.callee.length==test.length
+
+         if(arguments.callee.length==arguments.length){
+         return a+b;
+         }else{
+         return 'arguments is wrong'
+         }
+         }
+
+         //        alert(test());  //NaN
+         alert(test(10,20));   //30
+         */
+
+        //      阶乘操作
+        function fact(n) {
+            if (n <= 1) {
+                return 1
+            } else {
+                return n * arguments.callee(n - 1);//arguments.callee就相当于fact,如果使用fact，进行如下操作就会报错fact is not a function
+            }
+        }
+
+        var a = fact;
+        fact = null;
+
+        alert(a(3));//6
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

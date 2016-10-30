@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>obj test</title>
+    <script>
+        /*
+         * 模拟Java里面的map
+         * */
+
+        /*先定义一个Map函数*/
+        function Map() {
+            //private
+            var obj = {};//空的对象存放键值对
+            //put方法
+            this.put = function (key, value) {
+                obj[key] = value;  //把键值对绑定到obj中
+            };
+            //size方法，获得map容器的个数
+            this.size = function () {
+                var sum = 0;
+                for (var x in obj) {
+                    sum++;
+                }
+                return sum;
+            };
+            //get方法 根据key取value的值
+            this.get=function(key){
+// 如果取zero的值0，由于if(0)会自动转化false，使得条件判断不充分,所以添加后两种判断条件
+                if(obj[key]||obj[key]===0||obj[key]===false){
+                    return obj[key];
+                }else{
+                    return null;
+                }
+            };
+            //remove删除方法
+            this.remove= function (key) {
+                if(obj[key]||obj[key]===0||obj[key]===false){
+                    delete obj[key];
+                }
+            };
+            //eachMap遍历元素方法
+            this.eachMap= function (fn) {
+                for(var index in obj){
+                    fn(index,obj[index]);
+                  //  console.log(index + "    " + obj[index]);
+                }
+            }
+        }
+
+        var m = new Map();
+        m.put('01', 'abc');
+        m.put('02', 123);
+        m.put('03', true);
+        m.put('fake', false);
+        m.put('zero', 0);
+        m.put('time', new Date());
+        m.remove('zero');
+
+        m.eachMap(function(key,value){
+            console.log(key+':'+value);
+        });
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
