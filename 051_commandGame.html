@@ -87,8 +87,8 @@
     /*
      * game Implement code
      * */
-    //有一个命令接口 包含两个方法：执行命令和回退命令
-    var ReverseCmdInterface = new LYN.Interface('ReverseCmdInterface', ['execute', 'undo']);
+    //有一个命令接口 包含方法：执行命令。需要重画命令集合，所以去掉undo方法
+    var ReverseCmdInterface = new LYN.Interface('ReverseCmdInterface', ['execute']);
 
     //命令对象（调用者）的类，参数：接收者（cursor）
     var MoveUp = function (cursor) {
@@ -99,9 +99,6 @@
         execute: function () {
             //真正的接收者调用自己的方法执行move方法（x，y）
             this.cursor.move(0, -20);
-        },
-        undo: function () {
-            this.cursor.move(0, 20);
         }
     };
 
@@ -111,11 +108,7 @@
     MoveDown.prototype = {
         constructor: MoveDown,
         execute: function () {
-            //真正的接收者调用自己的方法执行move方法（x，y）
             this.cursor.move(0, 20);
-        },
-        undo: function () {
-            this.cursor.move(0, -20);
         }
     };
 
@@ -125,11 +118,7 @@
     MoveLeft.prototype = {
         constructor: MoveLeft,
         execute: function () {
-            //真正的接收者调用自己的方法执行move方法（x，y）
             this.cursor.move(-20, 0);
-        },
-        undo: function () {
-            this.cursor.move(20, 0);
         }
     };
 
@@ -139,11 +128,7 @@
     MoveRight.prototype = {
         constructor: MoveRight,
         execute: function () {
-            //真正的接收者调用自己的方法执行move方法（x，y）
             this.cursor.move(20, 0);
-        },
-        undo: function () {
-            this.cursor.move(-20, 0);
         }
     };
 
@@ -153,11 +138,9 @@
         //宽 高代表外层容器的宽高
         this.width = w;
         this.height = h;
-        //目标元素对象的具体位置
-        this.position = {
-            x: w / 2,
-            y: h / 2
-        };
+        //命令集合
+        this.commandStack=[];
+
         //html:canvas画布
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
@@ -165,36 +148,48 @@
         parent.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.fillStyle = 'red';
+        this.ctx.strokeStyle = 'red';//线的颜色
         this.move(0, 0);//初始化位置
     };
     Cursor.prototype = {
         constructor: Cursor,
+        //move把当前命令放入命令集合中
         move: function (x, y) {
+            var _this=this;
+            //执行前保存命令函数，命令集合保留的是函数
+            this.commandStack.push(function (){_this.lineTo(x, y);});
+            //执行命令
+            this.executeCommand();
+        },
+        lineTo: function (x,y) {
             this.position.x += x;
             this.position.y += y;
-            this.ctx.clearRect(0, 0, this.width, this.height);//清空画布
-            this.ctx.fillRect(this.position.x, this.position.y, 50, 50);//画出方块
-        }
-    };
-
-    //应该有一个命令集合[数组]：目的就是为了当执行每一个命令之前 把该命令加入到集合中 （push、pop）
-    //命令对象在执行真的操作之前　应该把该命令加入到集合中　也就是在原始命令类上加一些新的特性　：特别适合（装饰者模式）
-    //使用装饰者模式把命令集合加到各个命令者上
-    //当前是一个装饰类 装饰命令对象类的实例 两个参数（原始的命令对象[被装饰者]  , 命令集合[数组] ）
-    var UndoDecorator = function (command, undoStack) {
-        this.command=command;
-        this.undoStack=undoStack;
-    };
-    UndoDecorator.prototype={
-        constructor: UndoDecorator,
-        execute: function () {
-            //在执行真正命令之前 把命令加入命令集合中
-            this.undoStack.push(this.command);
-            this.command.execute();
+            this.ctx.lineTo(this.position.x, this.position.y);//画线方法
+        },
+        //执行命令集合
+        executeCommand: function () {
+            //确定原始位置
+            this.position = {
+                x: this.width / 2,
+                y: this.height / 2
+            };
+            //清空当前的画布
+            this.ctx.clearRect(0,0,this.width,this.height);
+            //开始路径,确定起点
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.position.x,this.position.y);
+            //遍历命令集合，执行命令
+            for(var i=0;i<this.commandStack.length;i++){
+                this.commandStack[i]();
+            }
+            //描边
+            this.ctx.stroke();
         },
         undo: function () {
-            this.command.undo();
+            //一处最后一次命令
+            this.commandStack.pop();
+            //执行命令集合
+            this.executeCommand();
         }
     };
 
@@ -209,34 +204,27 @@
         });
     };
     //回退按钮
-    var UndoButton= function (element,undoStack) {
+    var UndoButton= function (element,cursor) {
         this.element=element;
         LYN.EventUtil.addHandler(this.element,'click', function () {
-            if(undoStack.length===0){
-                alert("已经是最后一步了，不能再退了哦！");
-                return;
-            }
-            // 把最后一次命令拿出来 然后直接执行回退操作
-            var lastCommand=undoStack.pop();
-            lastCommand.undo();
+            cursor.undo();
         });
     };
 
     window.onload=function(){
         //客户：创建命令
         var container=document.getElementById('container');
-        var cursor=new Cursor(450,300,container);
-        var undoStack=[];//命令集合
-        var upCommand=new UndoDecorator(new MoveUp(cursor),undoStack),
-            downCommand=new UndoDecorator(new MoveDown(cursor),undoStack),
-            leftCommand=new UndoDecorator(new MoveLeft(cursor),undoStack),
-            rightCommand=new UndoDecorator(new MoveRight(cursor),undoStack);
+        var cursor=new Cursor(500,300,container);
+        var upCommand=new MoveUp(cursor),
+            downCommand=new MoveDown(cursor),
+            leftCommand=new MoveLeft(cursor),
+            rightCommand=new MoveRight(cursor);
 
         var upBtn=new commandButton(document.getElementById('up'),upCommand),
             downBtn=new commandButton(document.getElementById('down'),downCommand),
             leftBtn=new commandButton(document.getElementById('left'),leftCommand),
             rightBtn=new commandButton(document.getElementById('right'),rightCommand),
-            undoBtn=new UndoButton(document.getElementById('undo'),undoStack);
+            undoBtn=new UndoButton(document.getElementById('undo'),cursor);
     };
 
 
