@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>049-命令模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<button id="btn-start">执行效果</button>
+<button id="btn-end">取消效果</button>
+
+<script>
+    /*
+     * 命令者模式：一种封装方法调用的方式。用途：把执行命令的调用者和执行命令的执行者，是两者之间产生一个松耦合
+     * 命令模式必须实现接口（execute）
+     * 要执行一个操作：命令1、命令2、命令3
+     * 命令模式的主要概念：调用者只需要执行相应的命令即可，不管命令如何执行
+     *                   执行者才去处理命令的真正实现
+     * 命令模式分类：简单命令、复杂命令模式、闭包命令模式（常用：更灵活的调用）
+     * 客户、调用者、接收者
+     * 客户创建命令 ，调用这个执行命令 ，接受者在命令执行时进行相应的操作
+     */
+
+    var CommandInterface=new LYN.Interface('CommandInterface',['execute']);
+
+    //点击按钮触发几个元素执行动画效果:2个命令  1start  2end
+    var StartCommand= function (obj) {
+        this.ad=obj;
+    };
+    StartCommand.prototype.execute= function () {
+       this.ad.start();
+    };
+
+    var StopCommand= function (obj) {
+        this.ad=obj;
+    };
+    StopCommand.prototype.execute= function () {
+        this.ad.stop();
+    };
+
+    var cmdb=new StartCommand(obj);
+    cmdb.execute();
+    var cmde=new StopCommand(obj);
+    cmde.execute();
+
+    //闭包命令模式
+    function MakeStart(obj){
+        return function () {
+            obj.start();
+        }
+    }
+    function MakeStop(obj){
+        return function () {
+            obj.stop();
+        }
+    }
+    var benginCmd=new MakeStart(obj);
+    benginCmd();//命令开启
+    var endCmd=new MakeStart(obj);
+    endCmd();//命令关闭
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>031-函数链式调用</title>
+</head>
+<body>
+<script>
+    //1.简单的函数链式调用
+    function Dog(){
+        this.run=function(){
+            alert('Dog can run!');
+            return this;
+        };
+        this.eat=function(){
+            alert('Dog can eat!');
+            return this;
+        };
+        this.bite=function(){
+            alert('Dog can bite!');
+            return this;
+        }
+    }
+
+    var d1=new Dog();
+    d1.run().eat().bite();
+    //d1.eat();
+    //d1.bite();
+
+
+</script>
+</body>
+</html>

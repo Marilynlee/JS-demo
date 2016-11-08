@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>047-代理模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<div id="container-box"></div>
+<script>
+    //代理模式（proxy）：代理也是对象，他的目的就是为了节制（控制）对本体对象的访问
+    var LibraryInterface = new LYN.Interface('LibraryInterface', ['addBook', 'findBook', 'checkBook', 'returnBook']);
+    var Books = function (id, title, author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    };
+
+    //图书馆(本体对象 , 实例化图书馆需要消耗很多的资源)
+    var Library = function (books) {
+        this.books = books;
+    };
+    Library.prototype = {
+        constructor: Library,
+        addBook: function (book) {
+            this.books[book.id] = book;
+        },
+        findBook: function (id) {
+            if (this.books[id]) {
+                return this.books[id];
+            }
+            return null;
+        },
+        checkBook: function (id) {
+            return this.findBook(id);
+        },
+        returnBook: function (book) {
+            this.books[book.id] = book;
+        }
+    };
+
+
+    //图书馆代理对象
+    var LibraryProxy = function (books) {
+        this.books = books;
+        this.library = null;//定义一个空对象
+    };
+    LibraryProxy.prototype = {
+        constructor: LibraryProxy,
+        initializeLibrary: function () {
+            if (this.library == null) {
+                this.library = new Library(this.books);
+            }
+        },
+        addBook: function (book) {
+            this.initializeLibrary();
+            this.library.addBook(book);
+        },
+        findBook: function (id) {
+            this.initializeLibrary();
+            return this.library.findBook(id);
+        },
+        checkBook: function (id) {
+            this.initializeLibrary();
+            return this.findBook(id);
+        },
+        returnBook: function (book) {
+            this.initializeLibrary();
+            this.library.returnBook(book);
+        }
+    };
+
+    //实例化的是代理对象：推迟本体对象实例化的时间，再具体调用方法的时候，再去实例化
+    var proxy = new LibraryProxy({
+        '01': new Books('01', 'html', 'zs'),
+        '02': new Books('02', 'css', 'ad'),
+        '03': new Books('03', 'js', 'fr')
+    });
+    var book=new Books('04', 'java', 'hy');
+    proxy.addBook(book);
+    console.log(proxy.checkBook('04'));
+
+</script>
+</body>
+</html>

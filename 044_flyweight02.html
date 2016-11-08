@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>044-享元模式02</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<script>
+   /*
+   * 享元模式：优化设计模式（时间：代码的运行时间；空间：浏览器的内存）
+   * 享元模式：内在数据static不变的：出厂商、型号、出厂日期
+   *          外在数据dynamic变化的：拥有者、车牌号、最近登记日期
+   * */
+
+    //出厂商、型号、出厂日期、拥有者、车牌号、最近登记日期
+    var Car= function (make ,model , year , owner , tag , renewDate) {
+        this.make=make;
+        this.model=model;
+        this.year=year;
+    };
+    Car.prototype={
+        constructor:Car,
+        getMake:function(){
+            return this.make;
+        },
+        getModel:function(){
+            return this.model;
+        },
+        getYear:function(){
+            return this.year;
+        }
+    };
+
+   //闭包工厂模式
+   var CarFactory=(function () {
+       //用于承装已经生产好的car
+       var createdCars={};
+       return {
+           createCar:function(make,model,year){
+               //如果createdCars对象已经存在，直接返回当前的make、model、year，如果不存在创建一个
+               if(createdCars[make+model+year]){
+                   return createdCars[make+model+year];
+               }else{
+                   var car=new Car(make,model,year);
+                   createdCars[make+model+year]=car;
+                   return car;
+               }
+           }
+       }
+   })();
+
+   //单体模式：把外载的数据和内在的数据结合在一起
+   var CarRecordManager=(function(){
+       //把登记好的汽车放入此对象中
+       var carRecordDateBase={};
+       return {
+           addCarRecord:function (make ,model , year, owner, tag, renewDate) {
+               var car=CarFactory.createCar(make ,model , year);
+               carRecordDateBase[tag]={
+                   owner:owner,
+                   renewDate:renewDate,
+                   car:car
+               };
+           },
+           getRegister:function(tag,newRenewDate){
+               carRecordDateBase[tag].renewDate=newRenewDate;
+           }
+       }
+
+   })();
+
+    var arr=[];
+    var startTime=new Date().getTime();
+    for(var i=0;i<5000000;i++){
+        //1010ms   web:266,580
+        //arr.push(new Car('Toyota','辉腾','2016-05-01','Lyn','AK1006','2016-11-03'));
+
+        //享元模式：3621ms   web:39,600
+        arr.push(CarRecordManager.addCarRecord('Toyota','辉腾','2016-05-01','Lyn','AK1006','2016-11-03'));
+    }
+    var endTime=new Date().getTime();
+    alert(endTime-startTime);
+
+
+
+</script>
+</body>
+</html>

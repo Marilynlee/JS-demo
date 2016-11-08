@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>050-命令模式</title>
+    <script src="commonUnit.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            height: 500px;
+            border: 3px solid #999999;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        #target {
+            margin: 150px auto;
+            width: 70px;
+            height: 50px;
+            padding: 5px;
+            border: 1px solid #e1e1e1;
+        }
+
+        #target img {
+            width: 70px;
+            height: 50px;
+            text-align: center;
+        }
+
+        .list-box {
+            list-style: none;
+            height: 30px;
+            position: absolute;
+            bottom: 20px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+            padding: 0;
+            /*font-size: 0;*/
+        }
+
+        .list-item {
+            display: inline-block;
+        }
+
+        .list-item button {
+            display: inline-block;
+            width: 60px;
+            padding: 3px;
+            border: 1px solid #cec0c0;
+            background: #3cd3f7;
+            border-radius: 2px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!--<div id="target"><img src="Koala.jpg" alt="picture"/></div>-->
+    <ul class="list-box">
+        <li class="list-item">
+            <button id="up">UP</button>
+        </li>
+        <li class="list-item">
+            <button id="down">DOWN</button>
+        </li>
+        <li class="list-item">
+            <button id="left">LEFT</button>
+        </li>
+        <li class="list-item">
+            <button id="right">RIGHT</button>
+        </li>
+        <li class="list-item">
+            <button id="undo">UNDO</button>
+        </li>
+    </ul>
+</div>
+
+<script>
+    /*
+     * 命令者模式：一种封装方法调用的方式。用途：把执行命令的调用者和执行命令的执行者，是两者之间产生一个松耦合
+     * 命令模式必须实现接口（execute）
+     * 要执行一个操作：命令1、命令2、命令3
+     * 命令模式的主要概念：调用者只需要执行相应的命令即可，不管命令如何执行
+     *                   执行者才去处理命令的真正实现
+     * 命令模式分类：简单命令、复杂命令模式、闭包命令模式（常用：更灵活的调用）
+     * 客户、调用者、接收者
+     * 客户创建命令 ，调用这个执行命令 ，接受者在命令执行时进行相应的操作
+     */
+
+    /*
+     * 用命令模式实现简单的小游戏
+     * 页面4个按钮分别控制上、下、左、右
+     * 目标对象：元素 使用控制键移动目标对象
+     * 退回按钮：还原上一步的操作，有一个集合保存所有操作，以便回退
+     */
+
+    /*
+     * game Implement code
+     * */
+    //有一个命令接口 包含两个方法：执行命令和回退命令
+    var ReverseCmdInterface = new LYN.Interface('ReverseCmdInterface', ['execute', 'undo']);
+
+    //命令对象（调用者）的类，参数：接收者（cursor）
+    var MoveUp = function (cursor) {
+        this.cursor = cursor;
+    };
+    MoveUp.prototype = {
+        constructor: MoveUp,
+        execute: function () {
+            //真正的接收者调用自己的方法执行move方法（x，y）
+            this.cursor.move(0, -20);
+        },
+        undo: function () {
+            this.cursor.move(0, 20);
+        }
+    };
+
+    var MoveDown = function (cursor) {
+        this.cursor = cursor;
+    };
+    MoveDown.prototype = {
+        constructor: MoveDown,
+        execute: function () {
+            //真正的接收者调用自己的方法执行move方法（x，y）
+            this.cursor.move(0, 20);
+        },
+        undo: function () {
+            this.cursor.move(0, -20);
+        }
+    };
+
+    var MoveLeft = function (cursor) {
+        this.cursor = cursor;
+    };
+    MoveLeft.prototype = {
+        constructor: MoveLeft,
+        execute: function () {
+            //真正的接收者调用自己的方法执行move方法（x，y）
+            this.cursor.move(-20, 0);
+        },
+        undo: function () {
+            this.cursor.move(20, 0);
+        }
+    };
+
+    var MoveRight = function (cursor) {
+        this.cursor = cursor;
+    };
+    MoveRight.prototype = {
+        constructor: MoveRight,
+        execute: function () {
+            //真正的接收者调用自己的方法执行move方法（x，y）
+            this.cursor.move(20, 0);
+        },
+        undo: function () {
+            this.cursor.move(-20, 0);
+        }
+    };
+
+    //接受者（也就是操作具体方法的对象） // HTML5 + ECMA5
+    //Cursor
+    var Cursor = function (w, h, parent) {
+        //宽 高代表外层容器的宽高
+        this.width = w;
+        this.height = h;
+        //目标元素对象的具体位置
+        this.position = {
+            x: w / 2,
+            y: h / 2
+        };
+        //html:canvas画布
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        parent.appendChild(this.canvas);
+
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.fillStyle = 'red';
+        this.move(0, 0);//初始化位置
+    };
+    Cursor.prototype = {
+        constructor: Cursor,
+        move: function (x, y) {
+            this.position.x += x;
+            this.position.y += y;
+            this.ctx.clearRect(0, 0, this.width, this.height);//清空画布
+            this.ctx.fillRect(this.position.x, this.position.y, 50, 50);//画出方块
+        }
+    };
+
+    //应该有一个命令集合[数组]：目的就是为了当执行每一个命令之前 把该命令加入到集合中 （push、pop）
+    //命令对象在执行真的操作之前　应该把该命令加入到集合中　也就是在原始命令类上加一些新的特性　：特别适合（装饰者模式）
+
+
+
+</script>
+</body>
+</html>

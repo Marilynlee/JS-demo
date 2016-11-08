@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>032-模拟jq底层链式调用</title>
+</head>
+<body>
+<input type="button" value="click me" id="inp"/>
+<script>
+    //模拟jq底层链式编程
+    //块级作用域
+    //特点1：程序启动块级作用域代码直接执行
+    //特点2：内部成员变量，外部无法访问（除了不加var修饰的变量）
+    (function(window,undefined){
+        //$ jq最常用的对象，返回给外界.大型程序开发中，一般使用“_”作为私有的对象（规范）
+        function _$(arguments){
+            //实现jq代码
+            var id=/#\w+/;//匹配id选择器
+            this.dom;//此属性接收所得到的元素
+//            如果匹配成功则接受dom元素
+            if(id.test(arguments[0])){
+                this.dom=document.getElementById(arguments[0].substring(1));
+            }else{
+                throw new Error("arguments is error!");
+            }
+        }
+
+        //在Function类上扩展可以实现链式编程的方法
+//        Function.prototype.method=function(methodName,fn){
+//            this.prototype[methodName]=fn;
+//            return this;//链式编程的关键
+//        };
+
+        //在的原型对象上加一些公共的方法
+        _$.prototype={
+            constructor:_$,
+            addEvent:function(type,fn){
+                //判断浏览器,给得到的元素注册事件
+                if(window.addEventListener){
+                    this.dom.addEventListener(type,fn);
+                }else if(window.attachEvent){
+                    this.dom.attachEvent('on'+type,fn);
+                }
+                return this;
+            },
+            setStyle:function(prop,val){
+                this.dom.style[prop]=val;
+                return this;
+            }
+        };
+
+        //window上先注册一个全局变量,与外界产生关系
+        window.$=_$;
+
+        //写一个准备的方法
+        _$.onReady=function(fn){
+            //1.实例化出来_$对象，真正的注册到window上去
+            window.$=function(){
+                return new _$(arguments);
+            };
+            //2.执行传入进来的代码
+            fn();
+            //3.实现链式编程
+//            _$.method("addEvent",function(){
+//                alert('123');
+//            }).method("setStyle",function(){
+//                alert('456');
+//            })
+        }
+    })(window);//程序的入口，把window传入作用域中
+
+
+    $.onReady(function(){
+        //alert($());
+        //$().addEvent().setStyle();
+        var inp=$("#inp");
+        //alert(inp.dom.nodeName);
+        inp.addEvent('click',function(){
+            alert('this is click!');
+        }).setStyle('fontSize','20px');
+    })
+
+</script>
+</body>
+</html>

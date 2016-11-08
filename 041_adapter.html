@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>041-适配器模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<input type="text" id="btn1"/>
+<input type="text" id="btn2"/>
+<script>
+    //适配器模式：例如 新电脑usb接口 《=== ps2 to usb ===》  鼠标和键盘
+    //程序中简单的适配器
+
+    //鼠标键盘
+    var obj = {
+        attr1: '属性1',
+        attr2: '属性2',
+        attr3: '属性3'
+    };
+
+    //适配器
+    function adapter(obj) {
+        interfaceMethod(obj.attr1,obj.attr2,obj.attr3);
+    }
+
+    //新电脑
+    function interfaceMethod(x, y, z) {
+        //do something
+    }
+
+    //开发中JavaScript类库（extJS、jQuery、yui、prototype...）
+    //根据ID获得指定dom元素：Prototype无需传递任何参数
+    function $(){
+        var elements=[];
+        for(var i=0;i<arguments.length;i++){
+            var element=arguments[i];
+            if(typeof element === 'string'){
+                element=document.getElementById(element)
+            }
+            if(arguments.length==1){
+                return element;
+            }
+            elements.push(element);
+        }
+        return elements;
+    }
+
+    //根据ID获得指定dom元素：yui需要传递一个参数
+    var YAHOO={};
+    YAHOO.get= function (ele) {
+        if(typeof ele=='string'){
+            return document.getElementById(ele);
+        }
+        if(ele instanceof Array){
+            var elements=[];
+            for(var i=0;i<ele.length;i++){
+                elements[elements.length]=YAHOO.get(ele[i]);
+            }
+            return elements;
+        }
+        if(ele){
+            return ele;
+        }
+        return null;
+    };
+
+    //各方法遵循自己的写法互不干扰，使用适配器进行转换
+    YAHOO.get=YuiToPrototype;
+    function YuiToPrototype(){
+        //对于YUI，永远只传递一个参数
+        if(arguments.length==1){
+            var e=arguments[0];
+            return $.apply(window,e instanceof Array?e:[e]);
+        }else{
+            return $.apply(window,arguments);
+        }
+    }
+
+
+    window.onload= function () {
+        /*//prototype写法
+        var domArr=$('btn1','btn2');
+        console.log(domArr);
+
+       //YUI的写法
+        var domArr=YAHOO.get(['btn1','btn2']);
+        console.log(domArr);*/
+
+        //prototype按照自己的传参方式获得dom元素
+        var domArr=YAHOO.get(['btn1','btn2']);
+        console.log(domArr);
+
+    }
+
+
+
+</script>
+</body>
+</html>

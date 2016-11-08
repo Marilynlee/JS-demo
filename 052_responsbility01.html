@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>052-责任链模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<script>
+    /*
+    * 责任链模式：发出者  接收者
+    * 发出者只知道第一个接收者，并向其发出请求
+    * 每个接收者对请求进行分析，要么处理，要么传递给下一个接收者
+    * 每个接收者只知道他的下一个接收者对象
+    * 如果没有任何接收者处理请求，那么请求将从链上离开，不同的实现对此有不同的反应。
+    * */
+
+    //项目开发过程：项目经理——>task 项目组[小A、小B、小C、小D]
+
+    //任务类:发出者
+    var Assign= function (task) {
+        this.task=task;
+    };
+
+    //接收任务的类
+    var WorkFlow= function (assign) {
+        this.assign=assign;
+    };
+    WorkFlow.prototype={
+        constructor:WorkFlow,
+        filterHandler: function (Exts) {
+            //分析当前的任务到底谁能去执行
+            for(var i= 0,len=Exts.length;i<len;i++){
+                //如果当前的任务正好是你这个人比较擅长的 那就之间执行
+                if(this.assign.task===Exts[i].cando){
+                    return Exts[i].todo();
+                }
+                return ;
+            }
+        }
+    };
+
+    //处理者
+    var Executor= function (name, cando) {
+        this.name = name ; 	//接受者的姓名
+        this.cando = cando;	//擅长的任务
+    };
+    Executor.prototype={
+        constructor:Executor,
+        todo: function () {
+            document.write(this.name+'擅长'+this.cando);
+        }
+    };
+    //实例化4个处理对象
+    var e1=new Executor('小A','html编程');
+    var e2=new Executor('小B','css编程');
+    var e3=new Executor('小C','js编程');
+    var e4=new Executor('小D','java编程');
+    //实例化任务对象
+    var assign = new Assign('php编程');
+    //处理任务的类实例
+    var work=new WorkFlow(assign);
+    work.filterHandler([e1,e2,e3,e4]);
+
+
+
+</script>
+</body>
+</html>

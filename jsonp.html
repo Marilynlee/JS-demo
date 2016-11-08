@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>JSONP 实例</title>
+    <script src="jquery-3.1.1.js"></script>
+</head>
+<body>
+<div id="divCustomers"></div>
+<!--<script type="text/javascript">
+    $.getJSON("http://www.runoob.com/try/ajax/jsonp.php?jsoncallback=?",
+            function callbackFunction(result) {
+                var html = '<ul>';
+                for (var i = 0; i < result.length; i++) {
+                    html += '<li>' + result[i] + '</li>';
+                }
+                html += '</ul>';
+                document.getElementById('divCustomers').innerHTML = html;
+            })
+</script>-->
+
+<script type="text/javascript">
+    $.ajax({
+        url:"http://www.runoob.com/try/ajax/jsonp.php?jsoncallback=?",
+        dataType:'jsonp',
+        data:{name:'lala',age:25},
+//        jsonp:'callbackFunction',
+        success:function (data) {
+            alert(111);
+            var html = '<ul>';
+            for (var i = 0; i < data.length; i++) {
+                html += '<li>' + data[i] + '</li>';
+            }
+            html += '</ul>';
+            document.getElementById('divCustomers').innerHTML = html;
+        },
+        timeout:3000
+    });
+</script>
+</body>
+</html>

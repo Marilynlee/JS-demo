@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>030—singleton</title>
+</head>
+<body>
+<script>
+    //惰性单体（和闭包单体有一些相似，闭包会全部返回属性和方法，惰性单体可控制返回的属性方法）
+    //顶级命名空间
+   /* var LYN={};
+    LYN.Base=(function(){
+        //私有变量，控制返回的单体对象
+        var unique;//undefined
+        //构造器init 初始化单体对象的方法
+        function init(){
+            //私有成员变量
+            var a1=true;
+            var f1=function(){ alert("This is f1!"); };
+            return {
+                attr1:a1,
+                fn1:function(){ return f1(); }
+            }
+        }
+        return {
+            getInstance:function(){
+                //如果不存在创建单体实例
+                if(!unique){  unique=init(); }
+                return unique;
+            }
+        }
+    })();
+    LYN.Base.getInstance().fn1();*/
+    //分支单体（判断程序的分支：浏览器差异的检测）
+    var LYN={};
+    var diff=true;
+    LYN.More=(function(){
+        var objA={//FF浏览器内部的一些属性和方法
+                attr1:"FF attribution"
+                },
+            objB={//chrome浏览器的一些属性和方法
+                attr1:"Chrome attribution"
+            };
+        return diff?objA:objB;
+    })();
+    alert(LYN.More.attr1);
+
+</script>
+</body>
+</html>

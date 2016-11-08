@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型</title>
+    <script>
+
+        //原型protoType
+        // 1、构造函数式
+        /*function Person(name, age) {
+         this.name = name;
+         this.age = age;
+         this.show = function () {
+         console.log('I am human!');
+         }
+         }
+         //利用构造函数创建的对象，都会重复创建Person的属性和方法,浪费资源
+         var p1 = new Person('aa', 20);
+         var p2 = new Person('bb', 21);
+         alert(p1.show == p2.show);//false
+         alert(p1.name == p2.name);//false*/
+
+        //2、对上述函数进行改造
+        /*function Person(name, age) {
+         this.name = name;
+         this.age = age;
+         this.show = showFn;
+         }
+         function showFn() {
+         console.log('I am human!');
+         }
+         //利用全局函数调用，虽然避免了重复创建show方法，但是创建了全局对象，不能回收
+         var p3 = new Person('aa', 20);
+         var p4 = new Person('bb', 21);
+         alert(p3.show == p4.show);//true
+         alert(p3.name == p4.name);//false*/
+
+
+        //创建每一个函数的时候都有一个protoType属性，这个属性本质是一个指针，总是指向一个包含函数属性和方法的对象，使得所有实例可以共享函数的属性和方法
+        function Person() {
+
+        }
+        Person.prototype.name = 'cc';
+        Person.prototype.age = 24;
+        Person.prototype.show = function () {
+            alert(this.name);
+        };
+        var p5 = new Person();
+        var p6 = new Person();
+//        alert(p5.name == p6.name);//true
+//        alert(p5.show == p6.show);//true
+
+        //构造函数   原型对象   实例对象
+        var obj = Person.prototype;
+
+        //构造函数.prototype=原型对象
+        alert(typeof obj);//object
+
+        //原型对象.constructor=构造函数
+        alert(obj.constructor);//function Person(){}
+
+        //实例对象.prototype=原型对象
+        alert(obj.isPrototypeOf(p5));//true,判断p5的原型是不是obj
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

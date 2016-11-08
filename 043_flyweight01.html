@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>043-享元模式01</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<script>
+   /*
+   * 享元模式：优化设计模式（时间：代码的运行时间；空间：浏览器的内存）
+   * */
+
+    //出厂商、型号、出厂日期、拥有者、车牌号、最近登记日期
+    var Car= function (make ,model , year , owner , tag , renewDate) {
+        this.make=make;
+        this.model=model;
+        this.year=year;
+        this.owner=owner;
+        this.tag=tag;
+        this.renewDate=renewDate;
+    };
+    Car.prototype={
+        constructor:Car,
+        getMake:function(){
+            return this.make;
+        },
+        getModel:function(){
+            return this.model;
+        },
+        getYear:function(){
+            return this.year;
+        },
+        getRegister:function(newRenewDate){
+            this.renewDate = newRenewDate;
+        }
+    };
+
+    var arr=[];
+    var startTime=new Date().getTime();
+    for(var i=0;i<5000000;i++){
+        //1010ms   web:266580
+        arr.push(new Car('Toyota','辉腾','2016-05-01','Lyn','AK1006','2016-11-03'));
+    }
+    var endTime=new Date().getTime();
+    alert(endTime-startTime);
+
+
+
+</script>
+</body>
+</html>

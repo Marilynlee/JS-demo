@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>038组合模式01</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<script>
+    // 组合模式
+    /*
+     * 场景模拟：
+     *  -> 公司
+     *			-> 财务部门
+     *						-> 张一
+     *						-> 张二
+     *						-> 张三
+     *			-> 销售部门
+     *						-> 张四
+     *						-> 张五
+     *						-> 张六
+     *		实际的任务具体是落实到人上去实施的 也就是说只有人才具有具体的方法实现
+     */
+
+    var Org=function(name){
+        this.name=name;
+        this.depts=[];
+    };
+    Org.prototype={
+        constructor:Org,
+        addDept: function (child) {
+            this.depts.push(child);
+            return this;
+        },
+        getDept: function (child) {
+            return this.depts;
+        }
+    };
+    var Dept=function(name){
+        this.name=name;
+        this.persons=[];
+    };
+    Dept.prototype={
+        constructor:Dept,
+        addPerson: function (child) {
+            this.persons.push(child);
+            return this;
+        },
+        getPerson: function (child) {
+            return this.persons;
+        }
+    };
+    var Person=function(name){
+        this.name=name;
+    };
+    Person.prototype={
+        constructor:Person,
+        hardWorking: function () {
+            document.write(this.name+': working hardly!');
+        },
+        sleeping: function () {
+            document.write(this.name+': sleeping!');
+        }
+    };
+
+    var p1 = new Person('张1');
+    var p2 = new Person('张2');
+    var p3 = new Person('张3');
+    var p4 = new Person('张4');
+    var p5 = new Person('张5');
+    var p6 = new Person('张6');
+
+    var dept1 = new Dept('开发部门');
+    dept1.addPerson(p1).addPerson(p2).addPerson(p3);
+    var dept2 = new Dept('销售部门');
+    dept2.addPerson(p4).addPerson(p5).addPerson(p6);
+
+    var org=new Org("QDET");
+    org.addDept(dept1).addDept(dept2);
+
+    //需求：具体的让一个人（张3）去努力工作
+    for(var i= 0,depts=org.getDept();i<depts.length;i++){
+        for(var j= 0,persons=depts[i].getPerson();j<persons.length;j++){
+            if(persons[j].name==='张6'){
+                persons[j].hardWorking();
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>

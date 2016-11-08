@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>036-桥接模式</title>
+    <script src="commonUnit.js"></script>
+    <script src="jquery-3.1.1.js"></script>
+</head>
+<body>
+<input type="button" id="btn" value="More..."/>
+<script>
+    /*
+    * 桥接模式主要用于把抽象和现实分开，使他们可以独立变化
+    * 应用场景：事件监听回调机制，如用户点击按钮，向服务器发送信息
+    * */
+
+    //传统模式
+    /*$(function(){
+        //1、前台页面逻辑
+        var btn=document.getElementById('btn');
+        //用事件注册的方式向元素上添加事件
+        LYN.EventUtil.addHandler(btn,'click',sendReq);
+
+        //2、后台业务逻辑
+        function sendReq(){
+            //ajax
+            //$.post('url',{msg:this.value},function(result){});
+            alert('Post the data:'+this.value);
+        }
+    })*/
+
+    //利用桥接模式，分开两个业务单元
+    $(function(){
+        //1、前台页面逻辑
+        var btn=document.getElementById('btn');
+        //用事件注册的方式向元素上添加事件
+        LYN.EventUtil.addHandler(btn,'click',bridgeHandler);
+
+        //利用桥模式分开1和2:此时不必非要触发btn的点击事件即可触发sendReq事件，单元测试的时候可直接调用检验
+        function bridgeHandler(){
+            var msg=this.value;
+            sendReq(msg);
+        }
+
+        //2、后台业务逻辑
+        function sendReq(msg){
+            //ajax
+            //$.post('url',{msg:this.value},function(result){});
+            alert('Post the data:'+msg);
+        }
+    })
+
+</script>
+</body>
+</html>

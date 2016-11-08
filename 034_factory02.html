@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>034-factory-002</title>
+</head>
+<body>
+<!--引入的公共js文件-->
+<script src="commonUnit.js"></script>
+<script>
+    //细粒度  粗粒度
+    //万事万物都是Object：卖车的商店=》卖车=》生产车=》Factory
+
+
+    //搭建一个工厂环境
+    //卖车的商店
+    function CarShop() {}
+    //卖车的方法
+    CarShop.prototype = {
+        constructor: CarShop,
+        sellCar: function (type) {
+            return CarFactory.creatCar(type);
+        }
+    };
+
+    //生产车的工厂 目的就是为了生产车
+    var CarFactory={//单体模式
+        creatCar:function(type){
+            var car;//声明一个变量
+            switch (type) {
+                case 'Benz': car = new Benz();break;
+                case 'Bmw': car = new Bmw(); break;
+                case 'Audi': car = new Audi(); break;
+                default: car = 'Not buy it!';
+            }
+            //检验接口的实现
+            LYN.Interface.checkImpl(car,CarInterface);
+            return car;
+        }
+    };
+
+    //接口对象的实例
+    var CarInterface = new LYN.Interface('CarInterface', ['start', 'run']);
+
+    //SuperClass 超类implements CarInterface
+    function BaseCar(){}
+    BaseCar.prototype={
+        constructor:BaseCar,
+        start:function(){
+            alert(this.constructor.name+" start");
+        },
+        run:function(){
+            alert(this.constructor.name+" run");
+        }
+    };
+
+    //Class Benz Bmw Audi
+    //注意：子类先继承父类，在拓展子类特有的方法，如果顺序反过来则会报错
+    function Benz() {}
+    LYN.extend(Benz,BaseCar);
+    Benz.prototype.driveBenz=function(){
+        alert("Benz drive");
+    };
+    function Bmw() {}
+    LYN.extend(Bmw,BaseCar);
+    Bmw.prototype.driveBenz=function(){
+        alert("Bmw drive");
+    };
+    function Audi() {}
+    LYN.extend(Audi,BaseCar);
+    Audi.prototype.driveBenz=function(){
+        alert("Audi drive");
+    };
+
+    var shop=new CarShop();
+    var car=shop.sellCar('Audi');
+    car.start();
+    car.run();
+    car.driveBenz();
+
+
+</script>
+</body>
+</html>

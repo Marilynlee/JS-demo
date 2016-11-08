@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>042-装饰者模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<script>
+    //装饰者模式：就是在不改变原有对象的基础上去扩展一些想要的方法和需求
+    //实现同样接口，需要有子类
+
+    var CarInterface = new LYN.Interface('CarInterface', ['getPrice', 'assemble']);
+    var Car = function(car){
+        //为了让子类继承：目的让子类多一个父类的引用
+        this.car=car;
+        LYN.Interface.checkImpl(this,CarInterface);//检测接口
+    };
+    Car.prototype = {
+        constructor: Car,
+        getPrice: function () {
+            return 200000;
+        },
+        assemble: function () {
+            document.write('组装汽车！');
+        }
+    };
+    //新需求：车灯light，车载冰箱icebox.新需求可能会影响到原始对象
+
+    //装饰者模式 把原始对象透明的包装到具有同样接口的另一个对象当中
+    var LightDecoration= function (car) {//car 是原始对象
+        //借用构造函数继承
+        LightDecoration.superClass.constructor.call(this,car);
+    };
+    LYN.extend(LightDecoration,Car);//原型继承
+    LightDecoration.prototype={
+        constructor:LightDecoration,
+        getPrice: function () {
+            return this.car.getPrice()+10000;
+        },
+        assemble: function () {
+            document.write('组装车灯！');
+        }
+    };
+
+    var IceboxDecoration=function(car){
+        IceboxDecoration.superClass.constructor.call(this,car);
+    };
+    LYN.extend(IceboxDecoration,Car);
+    IceboxDecoration.prototype={
+        constructor:IceboxDecoration,
+        getPrice: function () {
+            return this.car.getPrice()+20000;
+        },
+        assemble: function () {
+            document.write('组装车载冰箱！');
+        }
+    };
+
+    var car=new Car();
+     alert(car.getPrice());
+     car.assemble();
+
+     /*car=new LightDecoration(car);
+     alert(car.getPrice());
+     car.assemble();*/
+
+     car=new IceboxDecoration(car);
+     alert(car.getPrice());
+     car.assemble();
+
+
+    //装饰者模式不仅可以用在类上，还可以用在函数上
+    //返回当前时间
+    function getDate(){
+        return (new Date()).toString();
+    }
+
+    function upperDecoration(fn){
+        return function(){
+            return fn.apply(this,arguments).toUpperCase();
+        }
+    }
+
+    alert(getDate());
+    var getDec=upperDecoration(getDate);
+    alert(getDec());
+
+
+</script>
+</body>
+</html>

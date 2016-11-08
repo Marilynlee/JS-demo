@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>046-享元模式web日历</title>
+    <script src="commonUnit.js"></script>
+    <style>
+        .year-box{
+            /*line-height: 134px;*/
+        }
+        .caption{
+            line-height: 15px;
+            margin: 0;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .month-box{
+            width: 147px;
+            height: 130px;
+            border: 2px solid #999;
+            margin: 10px 20px;
+            vertical-align: middle;
+        }
+        .day-box{
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border: 1px solid #c1c1c1;
+            text-align: center;
+            margin: 0 -1px -1px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="container-box"></div>
+
+<script>
+    //Year对象、Month对象、Day对象
+    var CalenderInterface = new LYN.Interface('CalenderInterface', ['display']);
+    var CalenderYear = function (year, parent) {
+        this.year = year;
+        this.element = document.createElement('div');
+        this.element.style.display = 'none';
+        this.element.setAttribute('class','year-box');
+        parent.appendChild(this.element);
+        //判断是否是闰年
+        var isLeapYear = function (y) {
+            return (y > 0) && !(y % 4) && ((y % 100) || (y % 400));
+        };
+        //年对象里应该包含月份
+        this.months = [];
+        //每个月份多少天
+        this.numDays = [31, isLeapYear(this.year) ? 29 : 28, 31, 30, 31, 30, 30, 31, 30, 31, 30, 31];
+        for (var i = 0; i < 12; i++) {
+            this.months[i] = new CalenderMonth(i, this.numDays[i], this.element);
+            var caption=document.createElement('p');
+            caption.setAttribute('class','caption');
+            caption.innerHTML=this.year+' - ' + (this.months[i].monthNum+1)+'';
+            this.months[i].element.appendChild(caption);
+        }
+    };
+    CalenderYear.prototype = {
+        constructor: CalenderYear,
+        display: function () {
+            for (var i = 0; i < this.months.length; i++) {
+                this.months[i].display();
+            }
+            //显示出来月份
+            this.element.style.display = 'block';
+        }
+    };
+
+
+    var CalenderMonth = function (monthNum, numDays, parent) {
+        this.monthNum=monthNum;
+        this.element = document.createElement('div');
+        this.element.style.display = 'none';
+        this.element.setAttribute('class','month-box');
+        parent.appendChild(this.element);
+        //月对象里应该包天的数组
+        this.days = [];
+        for (var i = 0; i <numDays; i++) {
+            this.days[i] = calenderDaySingleInterface;
+        }
+    };
+    CalenderMonth.prototype = {
+        constructor: CalenderMonth,
+        display: function () {
+            for (var i = 0; i < this.days.length; i++) {
+                this.days[i].display(i+1,this.element);
+            }
+            //显示出来天
+            this.element.style.display = 'inline-block';
+        }
+    };
+
+    //空的模板
+    var CalenderDay = function () {};
+    CalenderDay.prototype = {
+        constructor: CalenderDay,
+        display: function (date,parent) {
+            var element = document.createElement('div');
+            parent.appendChild(element);
+            element.style.display = 'inline-block';
+            element.setAttribute('class','day-box');
+            element.innerHTML=date;
+        }
+    };
+    //单例对象
+    var calenderDaySingleInterface=new CalenderDay();
+
+
+    window.onload= function () {
+        var yearBox=document.getElementById('container-box');
+        var year15=new CalenderYear(2015,yearBox);
+        year15.display();
+        var year14=new CalenderYear(2012,yearBox);
+        year14.display();
+    }
+
+
+</script>
+</body>
+</html>

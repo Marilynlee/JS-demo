@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>048-观察者模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<input type="button" id="pub1" value="MaxPublish"/><input type="text" id="text1"/><br/>
+<input type="button" id="pub2" value="MinPublish"/><input type="text" id="text2"/><br/>
+<input type="button" id="pub3" value="CupPublish"/><input type="text" id="text3"/><br/>
+
+<textarea name="" id="sub1" cols="20" rows="10"></textarea>
+<textarea name="" id="sub2" cols="20" rows="10"></textarea>
+
+<script>
+    /*
+     * 观察者模式：观察者（订阅者）和被观察者（发布者）
+     * 观察者模式：对程序中某一个对象进行实时观察，当其状态发生变化时实时通知
+     * */
+
+    //发布者（被观察者）
+    var Publish = function (name) {
+        this.name = name;
+        this.subscribers = [];//接收所有订阅者（每个元素是函数类型的数组）
+    };
+
+    //Publish类的实例对象去发布消息
+    Publish.prototype.deliver = function (news) {
+        var publish=this;
+        this.subscribers.forEach(function (fn) {
+            fn(news, publish);//把新消息发给订阅者
+        });
+        return this;
+    };
+
+    //具体一个订阅者：订阅报纸的方法
+    Function.prototype.subscribe = function (publish) {
+        var sub = this;//取得具体的订阅者
+        //some方法可以循环遍历数组的每一个元素执行一个函数：如果有一个是true 返回true
+        var alreadyExists = publish.subscribers.some(function (item) {
+            return item === sub;
+        });
+        //如果当前出版社不存在这个人，将其加入
+        if (!alreadyExists) {
+            publish.subscribers.push(sub);
+        }
+        return this;
+    };
+
+    //具体一个订阅者：取消订阅报纸的方法
+    Function.prototype.unsubscribe = function (publish) {
+        var sub = this;//取得具体的订阅者
+        //filter过滤方法：可以循环遍历数组的每一个元素执行一个函数：如果不匹配删掉该元素,返回修改后的数组
+        publish.subscribers = publish.subscribers.filter(function (item) {
+            return item !== sub;
+        });
+        return this;
+    };
+
+    window.onload = function () {
+        //实例化发布者对象（Publish 被观察者）
+        var pub1 = new Publish('MaxPublish');
+        var pub2 = new Publish('MinPublish');
+        var pub3 = new Publish('CupPublish');
+
+        //观察者（订阅者）
+        var sub1 = function (news) {
+            document.getElementById('sub1').innerHTML += arguments[1].name + ':' + news + '\n';
+        };
+        var sub2 = function (news) {
+            document.getElementById('sub2').innerHTML += arguments[1].name + ':' + news + '\n';
+        };
+
+        sub1.subscribe(pub1).subscribe(pub2).subscribe(pub3);
+        sub2.subscribe(pub1).subscribe(pub3);
+
+        //事件绑定
+        var publish1 = document.getElementById('pub1');
+        var publish2 = document.getElementById('pub2');
+        var publish3 = document.getElementById('pub3');
+
+        LYN.EventUtil.addHandler(publish1, 'click', function () {
+            pub1.deliver(document.getElementById('text1').value);
+        });
+        LYN.EventUtil.addHandler(publish2, 'click', function () {
+            pub2.deliver(document.getElementById('text2').value);
+        });
+        LYN.EventUtil.addHandler(publish3, 'click', function () {
+            pub3.deliver(document.getElementById('text3').value);
+        });
+
+        sub1.unsubscribe(pub1)
+    }
+
+</script>
+</body>
+</html>

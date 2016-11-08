@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>029-singleton</title>
+</head>
+<body>
+<script>
+    //单体模式singleton
+    //1.简单单体模式
+   /* var singleton={
+        attr1:true,
+        attr2:10,
+        method1:function(){alert("I am method 1.");},
+        method2:function(){alert("I am method 2.");}
+    };
+    singleton.method1();
+    //可用于划分命名空间，区分代码解耦作用
+    var LYN={};
+    LYN.singleton={
+        attr1:true,
+        attr2:10,
+        method1:function(){alert("I am lyn method 1.");},
+        method2:function(){alert("I am lyn method 2.");}
+    };
+    LYN.singleton.method1();*/
+    //2.借助闭包创建单体：简单单体的属性没有作用域，不属于私有变量,无作用域。而闭包可以保护数据
+    var LYL={};//命名空间
+    LYL.singleton=(function(){
+        //闭包：添加自己私有的成员，外部成员只能访问return出去的东西
+        var a1=10;
+        var f1=function(){alert("I am BiBao private method.");};
+       //把块级作用域里的执行结果赋值给单体对象
+        return {
+            attr:a1,
+            method:function(){return f1();}
+        };
+    })();
+    alert(LYL.singleton.attr);
+    LYL.singleton.method();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>040-门面模式</title>
+    <script src="commonUnit.js"></script>
+</head>
+<body>
+<div id="com1">This is div1 element!</div>
+<div id="com2">This is div2 element!</div>
+<div id="com3">This is div3 element!</div>
+<script>
+    /*
+    * 门面模式概念：简化API接口
+    * 经典场景：事件
+    * */
+    //当一个函数必须调用a、b才能实现，因为门面模式简化接口，现在只需要调用ab函数即可
+    /*function a(x){}
+    function b(y){}
+
+    function ab(x,y){
+        a(x);
+        b(y);
+    }*/
+
+    //简单的门面模式
+    window.onload=function(){
+        //给一个元素设置一个样式
+       /* var div=document.getElementById('com1');
+        div.style.color='red';*/
+
+        //给多个元素设置一个样式
+        //setStyle(['com1','com2','com3'],'color','blue')
+
+        //给多个元素设置多个样式
+        setCSS(['com1','com2','com3'],{
+            width:"300px",
+            height:"30px",
+            background:"red",
+            border:'1px solid #000',
+            margin:'10px',
+            lineHeight:'30px',
+            textAlign:'center'
+        });
+    };
+
+    function setStyle(eles,prop,val){
+        for(var i= 0,len=eles.length;i<len;i++){
+            document.getElementById(eles[i]).style[prop]=val;
+        }
+    }
+    function setCSS(eles,options){
+        for(var pros in options){
+            if(!options.hasOwnProperty(pros)){
+                continue;
+            }
+            setStyle(eles,pros,options[pros]);
+
+        }
+    }
+
+</script>
+</body>
+</html>

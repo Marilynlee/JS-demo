@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>037-桥接模式02</title>
+    <script src="commonUnit.js"></script>
+    <!--<script src="jquery-3.1.1.js"></script>-->
+</head>
+<body>
+<script>
+    //桥模式：特权函数
+    var PublicClass=function(){
+        //private
+        var name='Lady';
+        //getter访问私有变量,即为特权函数
+        this.getName=function(){
+            return name;
+        }
+    };
+    var p1=new PublicClass();
+    alert(p1.getName());
+
+
+    var PublicType=function(){
+        //private
+        var privateMethod= function () {
+            alert('执行一个复杂操作！');
+        };
+        //可以单独的单元测试privateMethod()，然后通过bridgeMethod与外界耦合测试外部单元
+        //使用特权函数去访问privateMethod
+        this.bridgeMethod=function(){
+            return privateMethod();
+        }
+    };
+    var p2=new PublicType();
+    p2.bridgeMethod();
+
+    //桥模式：用桥把多个单体组织到一起
+    //使每个单元都能独立化，实现自己的变化
+    var ClassA= function (a, b, c) {
+        this.a=a;
+        this.b=b;
+        this.c=c;
+    };
+    var ClassB= function (d, e) {
+        this.d=d;
+        this.e=e;
+    };
+    var BridgeClass= function (a, b, c, d, e) {
+        this.classA=new ClassA(a,b,c);
+        this.classB=new ClassB(d,e);
+    }
+
+</script>
+</body>
+</html>

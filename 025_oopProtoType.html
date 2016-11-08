@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>继承实例</title>
+
+</head>
+<body>
+<script>
+
+    //自定义extend方法
+    function extend(fu, zi) {
+        //目的：只继承父类的原型对象
+        //1、使用空函数进行中转
+        var F = new Function();
+        //2、实现空函数的原型对象和父类原型对象的转换
+        F.prototype = fu.prototype;
+        //3、实现原型继承
+        zi.prototype = new F();
+        //4、还原子类的构造器，3使得子类的构造器变为了F函数
+        zi.prototype.constructor = fu;
+        //保存父类的模板：一降低耦合性；二可以方便获得父类的原型对象
+        zi.fuClass = fu.prototype;//自定义子类的静态属性接收父类的原型对象
+        //判断父类的原型对象的构造器（加保险）
+        if (fu.prototype.constructor == Object.prototype.constructor) {
+            fu.prototype.constructor = fu;//还原父类的构造器
+        }
+
+    }
+
+
+    //父类构造器
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    //父类的原型对象属性
+    Person.prototype = {
+//            constructor:Person,
+        say: function () {
+            alert('Hello World');
+        }
+    };
+
+    //子类构造器
+    function Student(name, age, sex) {
+        //使用call apply实现继承
+//            Person.call(this, name, age);//混合继承1、借用构造函数继承
+        Student.fuClass.constructor.call(this, name, age);//混合继承1、借用构造函数继承
+        this.sex = sex;
+    }
+
+    //子类的原型对象属性
+    Student.prototype = {
+        say: function () {
+            alert('Hello Marilyn');
+        }
+    };
+
+    //混合继承=原型继承+借用构造函数（最常用的方法）
+    //Student.prototype = new Person();//混合继承2、原型继承（实质上即继承了原型对象，还继承了模板）
+    //混合继承缺点：实质上继承了1次父类的原型对象，2次父类模板，浪费资源
+
+
+    //代码改进：只继承一次父类的模板，一次原型对象
+    extend(Person, Student);//解除子类使用call apply时耦合的父类名称
+
+
+    var s = new Student('hehe', 21, 'male');
+    alert('name:' + s.name + ' age:' + s.age + ' sex:' + s.sex);//name:hehe age:21 sex:male
+    s.say();//Hello World  TODO 和视频不一样，say方法并未被覆盖，控制台报错
+
+</script>
+</body>
+</html>

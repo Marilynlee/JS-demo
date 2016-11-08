@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>简单原型</title>
+    <script>
+
+        //简单原型
+
+        function Person() {
+
+        }
+
+        Person.prototype = {
+//            constructor: Person,//表示原型对象的构造器
+            name: 'aa',
+            age: 25,
+            say: function () {
+                alert('I am ' + this.name);
+            }
+        };
+
+
+        Object.defineProperty(Person.prototype, 'constructor', {
+            enumerable: false,
+            value: Person
+        });
+
+        var p1 = new Person();
+        //alert(p1.name);//aa
+        //p1.say();//I am aa
+
+//        alert(Person.prototype.constructor);//function Object(){[native code]}，由于原型被赋值空的对象，所以无法指向构造函数Person，所以原型对象中一定要加上constructor属性。加上此属性后弹出function Person(){}
+
+
+//        for (var x in p1) {
+//            alert(x);//constructor name age say
+//        }
+        //constructor属性不能被枚举，由于上述的constructor是人为添加，所以被枚举出来
+
+        //ECMA5中给原型对象重新设置构造器的方法Object.definePrototype()
+        //3个参数，参一：重设构造器的对象；参二：设置什么属性；参三：options配置项（24-27行代码）
+
+
+        //        原型的动态特性
+        /*function Student() {
+        }
+        var s1 = new Student();
+
+        //原型对象的默认构造器为Student
+        Student.prototype.say = function () {
+            alert('lala');
+        };
+        s1.say();//lala*/
+
+
+//使用简单原型的时候，一定要先写好原型对象才能实例化，否则会报错
+        function Teach() {
+        }
+        var t1 = new Teach();//此时原型对象为{}
+
+        Teach.prototype = {
+            constructor: Teach,
+            name: 'teach',
+            age: 35,
+            say: function () {
+                alert('I am ' + this.name);
+            }
+        };
+
+        t1.say();//报错t1.say is not a function 因为原型对象里面没有任何属性和方法
+//        注意简单原型的使用顺序：实例对象必须在原型对象之后创建
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
